@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: mylibrary-user-service
+  cloud:
+    config:
+      failFast: true
+      profile: local
+      uri: ${CONFIG_SERVER_URI:http://localhost:8888}
