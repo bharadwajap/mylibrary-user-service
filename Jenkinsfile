@@ -32,11 +32,11 @@
 
 			stage('Dockerize') {
 				unstash 'workspace'
-            	final String activeContainers = sh(script: "sudo docker ps", returnStdout: true)
+            	final String activeContainers = sh(script: "sudo docker ps -a", returnStdout: true)
 	            boolean containerFound = activeContainers.toLowerCase().contains("${projectName}")
 	            if (containerFound) {
-	                sh "sudo docker --config=\"${WORKSPACE}\" stop ${projectName}"
-	                sh "sudo docker --config=\"${WORKSPACE}\" rm ${projectName}"
+	                sh "sudo docker stop ${projectName}"
+	                sh "sudo docker rm ${projectName}"
 	            }
 	            sh "sudo docker build -t ${projectName} ."
 				sh "sudo docker run --restart always --network=host --name=${projectName} -e CONFIG_SERVER_URI=http://${params.configServerIp}:8888 -td ${projectName}"
