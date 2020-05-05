@@ -16,7 +16,8 @@
 				name: 'configServerIp'
 			)
             ])
-            
+         ])
+                     
         try {
             stage('Collect info') {
                 checkout scm
