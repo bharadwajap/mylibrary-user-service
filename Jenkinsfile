@@ -6,7 +6,17 @@
 	def gitCredentials = 'mylibrary-github'
     // pipeline
     node(javaAgent) {
-
+    	properties([
+            [$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator',daysToKeepStr: '1', numToKeepStr: '4']],
+            parameters([
+                	
+			string(
+				defaultValue: 'localhost',
+				description: 'Config server host ip',
+				name: 'configServerIp'
+			)
+            ])
+            
         try {
             stage('Collect info') {
                 checkout scm
@@ -28,7 +38,7 @@
 	                sh "sudo docker --config=\"${WORKSPACE}\" rm ${projectName}"
 	            }
 	            sh "sudo docker build -t ${projectName} ."
-				sh "sudo docker run --restart always --network=host --name=${projectName} -e CONFIG_SERVER_URI=http://localhost:8888 -td ${projectName}"
+				sh "sudo docker run --restart always --network=host --name=${projectName} -e CONFIG_SERVER_URI=http://${params.configServerIp}:8888 -td ${projectName}"
 			}
         } catch (def e) {
 			print "Exception occurred while running the pipeline"+ e
